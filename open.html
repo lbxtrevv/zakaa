@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open in about:blank</title>
+<style>
+  :root { --bg: #f4f5f7; --fg: #1d2330; --accent: #2f5bea; --muted: #5b6475; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14171f; --fg: #e8ebf2; --accent: #6d8dff; --muted: #9aa3b5; }
+  }
+  html, body { height: 100%; margin: 0; }
+  body {
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg); color: var(--fg);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  main { text-align: center; padding: 24px; max-width: 420px; }
+  h1 { font-size: 1.4rem; margin: 0 0 8px; }
+  p { color: var(--muted); line-height: 1.5; margin: 0 0 20px; }
+  button {
+    font: inherit; font-weight: 600; cursor: pointer;
+    background: var(--accent); color: #fff; border: 0;
+    padding: 12px 22px; border-radius: 8px;
+  }
+  button:focus-visible { outline: 3px solid var(--fg); outline-offset: 2px; }
+  #msg { margin-top: 16px; font-size: .9rem; min-height: 1.2em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Open in a new about:blank tab</h1>
+  <p>Click the button to open the site inside an about:blank popup.</p>
+  <button id="go" type="button">Launch</button>
+  <div id="msg" role="status"></div>
+</main>
+
+<script>
+  const URL_TO_OPEN = "https://lbxtrevv.github.io/zaka-static/";
+
+  function launch() {
+    const msg = document.getElementById("msg");
+    const win = window.open("about:blank", "_blank");
+
+    if (!win) {
+      msg.textContent = "Popup blocked. Allow popups for this page, then click Launch again.";
+      return;
+    }
+
+    const doc = win.document;
+    doc.open();
+    doc.write(
+      '<!DOCTYPE html><html><head><meta charset="utf-8"><title>New Tab</title>' +
+      '<style>html,body{margin:0;height:100%;overflow:hidden}' +
+      'iframe{border:0;width:100%;height:100%}</style></head><body>' +
+      '<iframe src="' + URL_TO_OPEN + '" allowfullscreen ' +
+      'allow="fullscreen; autoplay; gamepad; clipboard-write"></iframe>' +
+      '</body></html>'
+    );
+    doc.close();
+    msg.textContent = "Opened.";
+  }
+
+  document.getElementById("go").addEventListener("click", launch);
+</script>
+</body>
+</html>
